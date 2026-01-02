@@ -30,7 +30,11 @@ function addEquipment() {
       })
     })
     .then(res => {
-      if (!res.ok) throw new Error("Server error");
+      if (!res.ok) {
+        return res.text().then(text => {
+          throw new Error(text || "Server error: " + res.status);
+        });
+      }
       return res.text();
     })
     .then(data => {
@@ -40,7 +44,11 @@ function addEquipment() {
       location.value = "";
     })
     .catch(err => {
-      showMessage("equipmentMessage", "Error: " + err.message, false);
+      let errorMsg = err.message;
+      if (err.message.includes("Failed to fetch") || err.message.includes("NetworkError")) {
+        errorMsg = "Cannot connect to server. Make sure the server is running on port 3000.";
+      }
+      showMessage("equipmentMessage", "Error: " + errorMsg, false);
     });
   }
   
@@ -67,7 +75,11 @@ function addEquipment() {
       })
     })
     .then(res => {
-      if (!res.ok) throw new Error("Server error");
+      if (!res.ok) {
+        return res.text().then(text => {
+          throw new Error(text || "Server error: " + res.status);
+        });
+      }
       return res.text();
     })
     .then(data => {
@@ -78,7 +90,11 @@ function addEquipment() {
       date.value = "";
     })
     .catch(err => {
-      showMessage("maintenanceMessage", "Error: " + err.message, false);
+      let errorMsg = err.message;
+      if (err.message.includes("Failed to fetch") || err.message.includes("NetworkError")) {
+        errorMsg = "Cannot connect to server. Make sure the server is running on port 3000.";
+      }
+      showMessage("maintenanceMessage", "Error: " + errorMsg, false);
     });
   }
   
